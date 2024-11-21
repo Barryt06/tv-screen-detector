@@ -44,27 +44,21 @@ captureVideoButton.addEventListener('click', async () => {
 
 // Upload video to Google Cloud Storage
 async function uploadToCloudStorage(videoBlob, fileName) {
-    const bucketUrl = 'https://storage.googleapis.com/upload/storage/v1/b/sync_app_video_samples/o';
-    const accessToken = '<Yya29.a0AeDClZAmdO1PcboI21zMa5Z9muR-d0EIwOzCaN4USJXTHxUpULbGuziqBrBB1_hSFJuhHAVlAngNjUZ58Bhqaw7Wtxdm9UgwWugOuOoDFI2iXR1l6wX1nnCW_VW3EyNSTNoMej9BMhuKDOtbMrbIcSaITwQSdLMtNFHQ_MSi91j5ZupcaCgYKAbISARMSFQHGX2MilgSnTS4cOtkColGeOfjxqA0183>'; // Replace with a valid OAuth token
-
+    
     const formData = new FormData();
     formData.append('file', videoBlob, fileName);
     formData.append('name', fileName);
 
     try {
-        const response = await fetch(`${bucketUrl}?uploadType=multipart`, {
+        fetch('https://serene-tundra-24888-5b5b7931001b.herokuapp.com/api/upload', {
             method: 'POST',
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
             body: formData,
-        });
-
-        if (response.ok) {
-            console.log(`Video uploaded successfully: ${fileName}`);
-        } else {
-            console.error('Failed to upload video:', await response.text());
-        }
+            
+            
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
     } catch (error) {
         console.error('Error uploading video:', error);
     }
