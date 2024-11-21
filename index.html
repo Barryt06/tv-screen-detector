@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TV Screen Detector</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <h1>Welcome to the TV Screen Detector App</h1>
+    <div id="cameraContainer">
+        <video id="cameraFeed" autoplay playsinline></video>
+        <div id="boundingBox"></div> <!-- Bounding box overlay -->
+        <div id="orientationPrompt">Please rotate your device for optimal experience</div> 
+    </div>
+      <select id="cameraSelect"></select> <!-- Camera selection dropdown -->
+    <button id="switchCamera">Switch Camera</button> <!-- Button to switch camera -->    
+    <button id="captureVideo">Capture Video</button> <!-- Button to capture the video -->
+    <canvas id="imageCanvas" style="display: none;"></canvas> <!-- Canvas element for capturing the image -->
+    
+
+    <!-- Video element to display captured video -->
+    <video id="capturedVideo" controls style="display: none;"></video>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
