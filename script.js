@@ -93,7 +93,7 @@ function captureVideo() {
         formData.append('uuid', uuid);
         formData.append('timestamp', timestamp);
 
-        fetch('https://serene-tundra-24888-5b5b7931001b.herokuapp.com/api/upload_video', {
+        fetch('https://serene-tundra-24888-5b5b7931001b.herokuapp.com/api/upload', {
             method: 'POST',
             body: formData,
             headers: {
