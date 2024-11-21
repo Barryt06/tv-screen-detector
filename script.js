@@ -1,72 +1,130 @@
-// References to HTML elements
-const cameraFeed = document.getElementById('cameraFeed');
-const captureVideoButton = document.getElementById('captureVideo');
-const capturedVideo = document.getElementById('capturedVideo');
 
-// Stream video feed from the camera
-navigator.mediaDevices.getUserMedia({ video: true })
-    .then(stream => {
-        cameraFeed.srcObject = stream;
+function getCameras() {
+  navigator.mediaDevices.enumerateDevices()
+    .then(devices => {
+      const videoInputs = devices.filter(device => device.kind === 'videoinput');
+      const cameraSelect = document.getElementById('cameraSelect');
+      cameraSelect.innerHTML = '';
+      videoInputs.forEach((device, index) => {
+        const option = document.createElement('option');
+        option.value = device.deviceId;
+        option.text = device.label || `Camera ${index + 1}`;
+        cameraSelect.appendChild(option);
+      });
     })
-    .catch(error => {
-        console.error("Error accessing camera:", error);
+    .catch(err => {
+      console.error("Error listing devices: ", err);
     });
+}
 
-// Capture and upload video
-captureVideoButton.addEventListener('click', async () => {
-    // Set up MediaRecorder to record the video
+
+function startCamera(deviceId) {
+  const hdConstraints = {
+    video: {
+      deviceId: deviceId ? { exact: deviceId } : undefined,
+      width: { min: 1280, ideal: 1920, max: 1920 },
+    height: { min: 720, ideal: 1080, max: 1080 },
+      // Enable automatic adjustment of the video to the environment
+      facingMode: "environment", // or "environment" for the rear camera
+      focusMode: "continuous", // request continuous focus
+      exposureMode: "continuous", // request continuous exposure
+    }
+  };
+
+  navigator.mediaDevices.getUserMedia(hdConstraints)
+    .then(function(stream) {
+      const cameraFeed = document.getElementById('cameraFeed');
+      cameraFeed.srcObject = stream;
+      // Ensure the video element has the appropriate event listeners for focus & exposure
+      cameraFeed.addEventListener('click', function() {
+        const track = stream.getVideoTracks()[0];
+        // Apply constraints for focus and exposure dynamically when the user taps the screen
+        track.applyConstraints({
+          advanced: [{ focusMode: "continuous" }, { exposureMode: "continuous" }]
+        });
+      });
+    })
+    .catch(function(error) {
+      console.error("Error accessing the camera: ", error);
+      alert("An error occurred while accessing the camera.");
+    });
+}
+
+ 
+
+function generateUUID() { // Helper function to generate UUID
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    let r = (Math.random() * 16) | 0,
+        v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
+// Retrieve the UUID from local storage or generate if not present
+const deviceIdentifier = localStorage.getItem('deviceIdentifier') || generateUUID();
+localStorage.setItem('deviceIdentifier', deviceIdentifier);
+
+function captureVideo() {
+    const cameraFeed = document.getElementById('cameraFeed');
     const stream = cameraFeed.srcObject;
     const mediaRecorder = new MediaRecorder(stream);
-    const chunks = [];
+    let videoChunks = [];
 
-    // Collect video data
-    mediaRecorder.ondataavailable = (event) => {
-        chunks.push(event.data);
+    // Generate UUID and UTC timestamp
+    const uuid = generateUUID();
+    const timestamp = new Date().toISOString();
+
+    mediaRecorder.ondataavailable = function(e) {
+        videoChunks.push(e.data);
     };
 
-    // Save and upload video when recording stops
-    mediaRecorder.onstop = async () => {
-        const blob = new Blob(chunks, { type: 'video/mp4' });
-        const fileName = `video_${Date.now()}.mp4`;
-
-        // Display the captured video locally
+    mediaRecorder.onstop = function() {
+        const videoBlob = new Blob(videoChunks, { type: 'video/webm' });
+        const capturedVideo = document.getElementById('capturedVideo');
+        capturedVideo.src = URL.createObjectURL(videoBlob);
         capturedVideo.style.display = 'block';
-        capturedVideo.src = URL.createObjectURL(blob);
 
-        // Upload video to Google Cloud Storage
-        await uploadToCloudStorage(blob, fileName);
+        // Convert Blob to FormData and send to server
+        const formData = new FormData();
+        const filename = `captured_${uuid}_${timestamp}.webm`;
+        formData.append('file', videoBlob, filename);
+
+        // Include UUID and timestamp as metadata
+        formData.append('uuid', uuid);
+        formData.append('timestamp', timestamp);
+
+        fetch('https://serene-tundra-24888-5b5b7931001b.herokuapp.com/api/upload_video', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-UUID': uuid,
+                'X-Timestamp': timestamp
+            }
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
     };
 
-    // Start recording and stop after 1.2 seconds
     mediaRecorder.start();
-    setTimeout(() => mediaRecorder.stop(), 1200); // 1.2 seconds
-});
 
-// Upload video to Google Cloud Storage
-async function uploadToCloudStorage(videoBlob, fileName) {
-    const bucketUrl = 'https://storage.googleapis.com/upload/storage/v1/b/sync_app_video_samples/o';
-    const accessToken = '<Yya29.a0AeDClZAmdO1PcboI21zMa5Z9muR-d0EIwOzCaN4USJXTHxUpULbGuziqBrBB1_hSFJuhHAVlAngNjUZ58Bhqaw7Wtxdm9UgwWugOuOoDFI2iXR1l6wX1nnCW_VW3EyNSTNoMej9BMhuKDOtbMrbIcSaITwQSdLMtNFHQ_MSi91j5ZupcaCgYKAbISARMSFQHGX2MilgSnTS4cOtkColGeOfjxqA0183>'; // Replace with a valid OAuth token
-
-    const formData = new FormData();
-    formData.append('file', videoBlob, fileName);
-    formData.append('name', fileName);
-
-    try {
-        const response = await fetch(`${bucketUrl}?uploadType=multipart`, {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-            body: formData,
-        });
-
-        if (response.ok) {
-            console.log(`Video uploaded successfully: ${fileName}`);
-        } else {
-            console.error('Failed to upload video:', await response.text());
-        }
-    } catch (error) {
-        console.error('Error uploading video:', error);
-    }
+    // Stop recording after a set duration
+    setTimeout(() => {
+        mediaRecorder.stop();
+    }, 1200); // Duration of recording in milliseconds
 }
+
+
+
+
+
+// Event listeners
+window.addEventListener('DOMContentLoaded', () => {
+    getCameras();
+    document.getElementById('switchCamera').addEventListener('click', () => {
+        const selectedCameraId = document.getElementById('cameraSelect').value;
+        startCamera(selectedCameraId);
+    });
+    document.getElementById('captureVideo').addEventListener('click', captureVideo);
+});
 
