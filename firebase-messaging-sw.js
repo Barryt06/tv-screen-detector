@@ -1,5 +1,5 @@
-importScripts("https://www.gstatic.com/firebasejs/9.24.0/firebase-app.js");
-importScripts("https://www.gstatic.com/firebasejs/9.24.0/firebase-messaging.js");
+importScripts("https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js");
+importScripts("https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging.js");
 
 // Firebase configuration
 const firebaseConfig = {
