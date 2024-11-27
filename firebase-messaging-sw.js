@@ -1,5 +1,5 @@
-importScripts("https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js");
-importScripts("https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging.js");
+importScripts("https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js");
 
 // Firebase configuration
 const firebaseConfig = {
@@ -13,7 +13,6 @@ const firebaseConfig = {
 
 // Initialize Firebase in the service worker
 firebase.initializeApp(firebaseConfig);
-
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
