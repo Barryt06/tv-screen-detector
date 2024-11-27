@@ -1,5 +1,3 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.24.0/firebase-app.js";
-import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.24.0/firebase-messaging.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -15,26 +13,25 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
-// Request notification permission and get the token
-Notification.requestPermission().then((permission) => {
-  if (permission === "granted") {
-    console.log("Notification permission granted.");
-    getToken(messaging, { vapidKey: "YOUR_VAPID_KEY" })
-      .then((currentToken) => {
-        if (currentToken) {
-          console.log("FCM Token:", currentToken);
-          // Optionally, send the token to your server
+// Request notification permission and retrieve FCM token
+Notification.requestPermission()
+    .then((permission) => {
+        if (permission === "granted") {
+            console.log("Notification permission granted.");
+            messaging.getToken({ vapidKey: "YOUR_VAPID_KEY" })
+                .then((currentToken) => {
+                    if (currentToken) {
+                        console.log("FCM Token:", currentToken);
+                        // Send the token to your server (if needed)
+                    } else {
+                        console.log("No registration token available.");
+                    }
+                })
+                .catch((err) => console.error("Error retrieving token:", err));
         } else {
-          console.log("No registration token available.");
+            console.log("Notification permission denied.");
         }
-      })
-      .catch((err) => {
-        console.error("An error occurred while retrieving token.", err);
-      });
-  } else {
-    console.log("Notification permission denied.");
-  }
-});
+    });
 
 // Handle incoming messages
 onMessage(messaging, (payload) => {
