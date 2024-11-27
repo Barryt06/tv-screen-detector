@@ -3,12 +3,12 @@ import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/fireb
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyBYzfW2IFhSInPazldWaDnYK2GCJ71mwyc",
+  authDomain: "sync-sport.firebaseapp.com",
+  projectId: "sync-sport",
+  storageBucket: "sync-sport.appspot.com",
+  messagingSenderId: "83820373833",
+  appId: "1:83820373833:web:e115eb15779f9cfc81dc98",
 };
 
 // Initialize Firebase
