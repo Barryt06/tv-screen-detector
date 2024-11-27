@@ -2,6 +2,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
+console.log("Firebase init script starting..."); // Add this log
+
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBYzfW2IFhSInPazldWaDnYK2GCJ71mwyc",
@@ -18,14 +20,19 @@ const messaging = getMessaging(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
+console.log("Firebase initialized"); // Add this log
+
 // Function to handle sign in and notification setup
 async function initializeNotifications() {
+  console.log("Initialize notifications function called"); // Add this log
   try {
     // First sign in with Google
     await signInWithPopup(auth, provider);
+    console.log("Google sign-in successful"); // Add this log
     
     // Then register service worker
     if ('serviceWorker' in navigator) {
+      console.log("Service Worker registration starting..."); // Add this log
       const registration = await navigator.serviceWorker.register('/tv-screen-detector/firebase-messaging-sw.js', {
         scope: '/tv-screen-detector/'
       });
@@ -34,6 +41,8 @@ async function initializeNotifications() {
       
       // Request notification permission
       const permission = await Notification.requestPermission();
+      console.log("Notification permission response:", permission); // Add this log
+      
       if (permission === "granted") {
         console.log("Notification permission granted.");
         
@@ -52,11 +61,15 @@ async function initializeNotifications() {
     }
   } catch (error) {
     console.error("Error during initialization:", error);
+    console.error("Error details:", error.message); // Add this log
   }
 }
 
+console.log("Setting up notification button..."); // Add this log
+
 // Add a button or call this function when needed
 document.addEventListener('DOMContentLoaded', () => {
+  console.log("DOM Content Loaded - Adding notification button"); // Add this log
   const notifyButton = document.createElement('button');
   notifyButton.textContent = 'Enable Notifications';
   notifyButton.onclick = initializeNotifications;
