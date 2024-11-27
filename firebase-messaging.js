@@ -36,13 +36,20 @@ Notification.requestPermission()
   });
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/tv-screen-detector/firebase-messaging-sw.js')
-    .then(function(registration) {
-      console.log('Service Worker registered with scope:', registration.scope);
-    })
-    .catch(function(error) {
-      console.error('Service Worker registration failed:', error);
-    });
+  navigator.serviceWorker.register('/tv-screen-detector/firebase-messaging-sw.js', {
+    scope: '/tv-screen-detector/'  // Explicitly set the scope to match GitHub Pages path
+  })
+  .then(function(registration) {
+    console.log('Service Worker registration successful with scope:', registration.scope);
+  })
+  .catch(function(error) {
+    console.log('Service Worker registration failed with error:', error);
+    // Log the specific error details
+    console.log('Error name:', error.name);
+    console.log('Error message:', error.message);
+    console.log('Error filename:', error.filename);
+    console.log('Error line number:', error.lineNumber);
+  });
 }
 
 // Handle incoming messages
