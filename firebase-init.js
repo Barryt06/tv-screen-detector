@@ -67,13 +67,10 @@ async function initializeNotifications() {
 
 console.log("Setting up notification button..."); // Add this log
 
-// Add a button or call this function when needed
+// Remove the button creation code and just call initialization when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-  console.log("DOM Content Loaded - Adding notification button"); // Add this log
-  const notifyButton = document.createElement('button');
-  notifyButton.textContent = 'Enable Notifications';
-  notifyButton.onclick = initializeNotifications;
-  document.body.appendChild(notifyButton);
+  console.log("Page loaded - starting notification setup");
+  initializeNotifications();
 });
 
 // Handle incoming messages
