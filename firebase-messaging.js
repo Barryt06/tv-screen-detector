@@ -9,7 +9,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 // Request notification permission and retrieve FCM token
