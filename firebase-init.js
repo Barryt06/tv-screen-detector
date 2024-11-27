@@ -3,12 +3,14 @@ import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/fireb
 
 // Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyBYzfW2IFhSInPazldWaDnYK2GCJ71mwyc",
-    authDomain: "sync-sport.firebaseapp.com",
-    projectId: "sync-sport",
-    storageBucket: "sync-sport.appspot.com",
-    messagingSenderId: "83820373833",
-    appId: "1:83820373833:web:e115eb15779f9cfc81dc98",
+  apiKey: "AIzaSyBYzfW2IFhSInPazldWaDnYK2GCJ71mwyc",
+  authDomain: "sync-sport.firebaseapp.com",
+  projectId: "sync-sport",
+  storageBucket: "sync-sport.appspot.com",
+  messagingSenderId: "83820373833",
+  appId: "1:83820373833:web:e115eb15779f9cfc81dc98",
+  // Add the OAuth Client ID
+  clientId: "83820373833-pabl1ia3emvujaq4k1h8oe8hh8uqumrb.apps.googleusercontent.com"
 };
 
 // Initialize Firebase
@@ -39,6 +41,7 @@ if ('serviceWorker' in navigator) {
                 }
             } catch (err) {
                 console.error("Error retrieving token:", err);
+                console.error("Error details:", err.message);
             }
         } else {
             console.log("Notification permission denied.");
