@@ -20,42 +20,37 @@ const messaging = getMessaging(app);
 async function initializeNotifications() {
   console.log("Starting notification initialization");
   try {
-    if ('serviceWorker' in navigator) {
+    const permission = await Notification.requestPermission();
+    console.log("Notification permission response:", permission);
+
+    if (permission === "granted") {
       const registration = await navigator.serviceWorker.register('/tv-screen-detector/firebase-messaging-sw.js', {
         scope: '/tv-screen-detector/'
       });
       console.log('Service Worker registered with scope:', registration.scope);
 
-      const permission = await Notification.requestPermission();
-      console.log("Notification permission response:", permission);
-
-      if (permission === "granted") {
-        try {
-          const currentToken = await getToken(messaging, {
-            vapidKey: "BAwMBHT-uNz_UDUGCCT2sbLZwzvAO7SvJjfDt4RtPt7Q6dgcnaL4F7NQ-ZI6XT8iONyF6S8IxqEN6YTJcjqqjcM",
-            serviceWorkerRegistration: registration
-          });
-          
-          if (currentToken) {
-            console.log("FCM Token:", currentToken);
-          } else {
-            console.log("No registration token available");
-          }
-        } catch (tokenError) {
-          console.error("Error getting token:", tokenError);
+      try {
+        const currentToken = await getToken(messaging, {
+          vapidKey: "BAwMBHT-uNz_UDUGCCT2sbLZwzvAO7SvJjfDt4RtPt7Q6dgcnaL4F7NQ-ZI6XT8iONyF6S8IxqEN6YTJcjqqjcM"
+        });
+        
+        if (currentToken) {
+          console.log("FCM Token:", currentToken);
+        } else {
+          console.log("No registration token available");
         }
+      } catch (tokenError) {
+        console.error("Error getting token:", tokenError);
       }
     }
   } catch (error) {
     console.error("Error during initialization:", error);
+    console.error("Error details:", error.message);
   }
 }
 
 // Initialize when page loads
-document.addEventListener('DOMContentLoaded', () => {
-  console.log("DOM loaded - starting notifications setup");
-  initializeNotifications();
-});
+initializeNotifications();
 
 // Handle incoming messages
 onMessage(messaging, (payload) => {
