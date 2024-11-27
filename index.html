@@ -1,26 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en"> <!-- Added language attribute -->
 <head>
+    <meta charset="UTF-8"> <!-- Ensures proper encoding -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsive design -->
     <title>TV Screen Detector</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="style.css"> <!-- Link to CSS -->
 </head>
 <body>
     <h1>Welcome to the TV Screen Detector App</h1>
+
+    <!-- Camera Feed Container -->
     <div id="cameraContainer">
         <video id="cameraFeed" autoplay playsinline></video>
         <div id="boundingBox"></div> <!-- Bounding box overlay -->
-        <div id="orientationPrompt">Please rotate your device for optimal experience</div> 
+        <div id="orientationPrompt">Please rotate your device for optimal experience</div>
     </div>
-      <select id="cameraSelect"></select> <!-- Camera selection dropdown -->
-    <button id="switchCamera">Switch Camera</button> <!-- Button to switch camera -->    
-    <button id="captureVideo">Capture Video</button> <!-- Button to capture the video -->
-    <canvas id="imageCanvas" style="display: none;"></canvas> <!-- Canvas element for capturing the image -->
-    
 
-    <!-- Video element to display captured video -->
+    <!-- Camera Selection Dropdown -->
+    <select id="cameraSelect"></select>
+
+    <!-- Buttons for Interaction -->
+    <button id="switchCamera">Switch Camera</button>
+    <button id="captureVideo">Capture Video</button>
+
+    <!-- Hidden Canvas for Capturing Image -->
+    <canvas id="imageCanvas" style="display: none;"></canvas>
+
+    <!-- Video Element to Display Captured Video -->
     <video id="capturedVideo" controls style="display: none;"></video>
 
+    <!-- JavaScript for App Functionality -->
     <script src="script.js"></script>
+
+    <!-- Firebase Configuration -->
+    <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-messaging.js"></script>
+    <script src="firebase-messaging.js"></script> <!-- Firebase Messaging Logic -->
 </body>
 </html>
 
