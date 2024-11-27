@@ -1,83 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"> <!-- Ensures proper encoding -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsive design -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TV Screen Detector</title>
-    <link rel="stylesheet" type="text/css" href="style.css"> <!-- Link to CSS -->
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
     <h1>Welcome to the TV Screen Detector App</h1>
-
-    <!-- Camera Feed Container -->
     <div id="cameraContainer">
         <video id="cameraFeed" autoplay playsinline></video>
-        <div id="boundingBox"></div> <!-- Bounding box overlay -->
+        <div id="boundingBox"></div>
         <div id="orientationPrompt">Please rotate your device for optimal experience</div>
     </div>
-
-    <!-- Camera Selection Dropdown -->
     <select id="cameraSelect"></select>
-
-    <!-- Buttons for Interaction -->
     <button id="switchCamera">Switch Camera</button>
     <button id="captureVideo">Capture Video</button>
-
-    <!-- Hidden Canvas for Capturing Image -->
     <canvas id="imageCanvas" style="display: none;"></canvas>
-
-    <!-- Video Element to Display Captured Video -->
     <video id="capturedVideo" controls style="display: none;"></video>
 
-    <!-- Firebase CDN Integration -->
-    <script type="module">
-        // Import Firebase SDK
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging.js";
-
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBYzfW2IFhSInPazldWaDnYK2GCJ71mwyc",
-            authDomain: "sync-sport.firebaseapp.com",
-            projectId: "sync-sport",
-            storageBucket: "sync-sport.appspot.com",
-            messagingSenderId: "83820373833",
-            appId: "1:83820373833:web:e115eb15779f9cfc81dc98",
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const messaging = getMessaging(app);
-
-        // Request notification permission and retrieve the FCM token
-        Notification.requestPermission()
-            .then((permission) => {
-                if (permission === "granted") {
-                    console.log("Notification permission granted.");
-                    getToken(messaging, { vapidKey: "BAwMBHT-uNz_UDUGCCT2sbLZwzvAO7SvJjfDt4RtPt7Q6dgcnaL4F7NQ-ZI6XT8iONyF6S8IxqEN6YTJcjqqjcM" }) // Replace with your VAPID key
-                        .then((currentToken) => {
-                            if (currentToken) {
-                                console.log("FCM Token:", currentToken);
-                                // Optionally, send the token to your server
-                            } else {
-                                console.log("No registration token available.");
-                            }
-                        })
-                        .catch((err) => console.error("Error retrieving token:", err));
-                } else {
-                    console.log("Notification permission denied.");
-                }
-            });
-
-        // Handle incoming messages
-        onMessage(messaging, (payload) => {
-            console.log("Message received:", payload);
-            const { title, body } = payload.notification;
-            new Notification(title, { body });
-        });
-    </script>
-
-    <!-- JavaScript for App Functionality -->
+    <!-- Move Firebase initialization to separate module -->
+    <script type="module" src="firebase-init.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
