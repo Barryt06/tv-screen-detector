@@ -54,7 +54,7 @@
             .then((permission) => {
                 if (permission === "granted") {
                     console.log("Notification permission granted.");
-                    getToken(messaging, { vapidKey: "YOUR_VAPID_KEY" }) // Replace with your VAPID key
+                    getToken(messaging, { vapidKey: "BAwMBHT-uNz_UDUGCCT2sbLZwzvAO7SvJjfDt4RtPt7Q6dgcnaL4F7NQ-ZI6XT8iONyF6S8IxqEN6YTJcjqqjcM" }) // Replace with your VAPID key
                         .then((currentToken) => {
                             if (currentToken) {
                                 console.log("FCM Token:", currentToken);
