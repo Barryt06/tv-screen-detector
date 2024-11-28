@@ -42,7 +42,7 @@ async function initializeNotifications() {
         console.log("Got ID token");
         
         const currentToken = await getToken(messaging, {
-          vapidKey: "BAwMBHT-uNz_UDUGCCT2sbLZwzvAO7SvJjfDt4RtPt7Q6dgcnaL4F7NQ-ZI6XT8iONyF6S8IxqEN6YTJcjqqjcM",
+          vapidKey: "BAwMBHT-uNz_UDUGCCT2sbLZwzvAO7SvJjfDt4RtPt7Q6dgcnaL4F7NQ-ZI6XT8iONyF6S8IxqEN6YTJcjqjjcM",
           serviceWorkerRegistration: await navigator.serviceWorker.register('/tv-screen-detector/firebase-messaging-sw.js', {
             scope: '/tv-screen-detector/'
           })
