@@ -39,13 +39,13 @@ async function initializeNotifications() {
     });
     
     // Then register service worker
-    if ('serviceWorker' in navigator) {
-      console.log("Service Worker registration starting..."); // Add this log
-      const registration = await navigator.serviceWorker.register('/tv-screen-detector/firebase-messaging-sw.js', {
-        scope: '/tv-screen-detector/'
-      });
+    // if ('serviceWorker' in navigator) {
+    //   console.log("Service Worker registration starting..."); // Add this log
+    //   const registration = await navigator.serviceWorker.register('/tv-screen-detector/firebase-messaging-sw.js', {
+    //     scope: '/tv-screen-detector/'
+    //   });
       
-      console.log('Service Worker registered with scope:', registration.scope);
+      // console.log('Service Worker registered with scope:', registration.scope);
       
       // Request notification permission
       const permission = await Notification.requestPermission();
@@ -57,6 +57,7 @@ async function initializeNotifications() {
         // Get FCM token
         const currentToken = await getToken(messaging, {
           vapidKey: "BAwMBHT-uNz_UDUGCCT2sbLZwzvAO7SvJjfDt4RtPt7Q6dgcnaL4F7NQ-ZI6XT8iONyF6S8IxqEN6YTJcjqqjcM",
+          serviceWorkerRegistration: registration
         });
         
         if (currentToken) {
