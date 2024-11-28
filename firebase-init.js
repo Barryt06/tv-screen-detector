@@ -36,27 +36,30 @@ async function initializeNotifications() {
     if (permission === "granted") {
       console.log("Notification permission granted.");
       
-      try {
-        // Get the ID token from the signed-in user
-        const idToken = await result.user.getIdToken();
-        console.log("Got ID token");
-        
-        const currentToken = await getToken(messaging, {
-          vapidKey: "BAwMBHT-uNz_UDUGCCT2sbLZwzvAO7SvJjfDt4RtPt7Q6dgcnaL4F7NQ-ZI6XT8iONyF6S8IxqEN6YTJcjqqjcM",
-          serviceWorkerRegistration: await navigator.serviceWorker.register('/tv-screen-detector/firebase-messaging-sw.js', {
-            scope: '/tv-screen-detector/'
-          }),
-          token: idToken  // Pass the user's ID token
-        });
-        
-        if (currentToken) {
-          console.log("FCM Token:", currentToken);
-        } else {
-          console.log("No registration token available.");
-        }
-      } catch (tokenError) {
-        console.error("Error getting token:", tokenError);
-        console.error("Token error details:", tokenError.message);
+      // Get the ID token from the signed-in user
+      const idToken = await result.user.getIdToken();
+      console.log("Got ID token");
+      
+      // Register service worker first
+      const swRegistration = await navigator.serviceWorker.register('/tv-screen-detector/firebase-messaging-sw.js', {
+        scope: '/tv-screen-detector/'
+      });
+      console.log('Service Worker registered successfully');
+    
+      // Wait a moment to ensure service worker is ready
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    
+      // Now try to get FCM token
+      const currentToken = await getToken(messaging, {
+        vapidKey: "BAwMBHT-uNz_UDUGCCT2sbLZwzvAO7SvJjfDt4RtPt7Q6dgcnaL4F7NQ-ZI6XT8iONyF6S8IxqEN6YTJcjqqjcM"
+      });
+      
+      console.log("Token request completed");
+      
+      if (currentToken) {
+        console.log("FCM Token:", currentToken);
+      } else {
+        console.log("No registration token available.");
       }
     }
   } catch (error) {
