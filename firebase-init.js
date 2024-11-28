@@ -57,7 +57,6 @@ async function initializeNotifications() {
         // Get FCM token
         const currentToken = await getToken(messaging, {
           vapidKey: "BAwMBHT-uNz_UDUGCCT2sbLZwzvAO7SvJjfDt4RtPt7Q6dgcnaL4F7NQ-ZI6XT8iONyF6S8IxqEN6YTJcjqqjcM",
-          serviceWorkerRegistration: registration
         });
         
         if (currentToken) {
