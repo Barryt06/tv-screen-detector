@@ -27,10 +27,6 @@ console.log("Firebase initialized"); // Add this log
 async function initializeNotifications() {
   console.log("Initialize notifications function called"); // Add this log
   try {
-    // First sign in with Google
-    await signInWithPopup(auth, provider);
-    console.log("Google sign-in successful"); // Add this log
-
     // Add right after the Google sign-in attempt:
     await signInWithPopup(auth, provider).then((result) => {
       console.log("Sign in successful, user:", result.user.email);
