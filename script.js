@@ -22,9 +22,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Capture and upload video
 captureVideoButton.addEventListener('click', async () => {
-    // Check if user is authenticated
-    const user = auth.currentUser;
-    if (!user) {
+    // Check if user is authenticated using Firebase directly
+    const currentUser = getAuth().currentUser;  // Use Firebase's getAuth()
+    if (!currentUser) {
         console.error('User not authenticated');
         alert('Please sign in first');
         return;
@@ -60,8 +60,8 @@ captureVideoButton.addEventListener('click', async () => {
 // Send video directly to Cloud Function
 async function sendToCloudFunction(videoBlob, fileName) {
     try {
-        const user = auth.currentUser;
-        if (!user) {
+        const currentUser = getAuth().currentUser;
+        if (!currentUser) {
             throw new Error('No authenticated user');
         }
 
@@ -70,7 +70,7 @@ async function sendToCloudFunction(videoBlob, fileName) {
         console.log('Blob size:', videoBlob.size);
 
         // Get fresh token
-        const idToken = await user.getIdToken(true);
+        const idToken = await currentUser.getIdToken(true);
         
         const formData = new FormData();
         formData.append('video', videoBlob, fileName);
