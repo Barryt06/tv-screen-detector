@@ -87,11 +87,13 @@ async function sendToCloudFunction(videoBlob, fileName) {
             mode: 'cors',
             headers: {
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${idToken}`
+                'Authorization': `Bearer ${idToken}`,
+                'Content-Type': 'multipart/form-data',  // Add this for FormData
+                'Origin': 'https://xav123j.github.io'   // Add your site origin
             },
             body: formData
         });
-
+            a
         console.log('Response status:', response.status);
         const textResponse = await response.text();
         console.log('Raw response:', textResponse);
