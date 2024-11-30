@@ -1,5 +1,3 @@
-import { auth } from './firebase-init.js';  // Adjust path if needed
-
 // References to HTML elements
 const cameraFeed = document.getElementById('cameraFeed');
 const captureVideoButton = document.getElementById('captureVideo');
