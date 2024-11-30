@@ -6,8 +6,15 @@ const capturedVideo = document.getElementById('capturedVideo');
 // Cloud Function URL
 const CLOUD_FUNCTION_URL = 'https://europe-west2-sync-app-440921.cloudfunctions.net/video_vision_http';
 
-// Initialize camera when page loads
+// Initialize camera and Firebase check when page loads
 document.addEventListener('DOMContentLoaded', async () => {
+    // Check if Firebase is initialized
+    if (!firebase.apps.length) {
+        console.error('Firebase not initialized!');
+        return;
+    }
+    
+    // Initialize camera
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ 
             video: true,
