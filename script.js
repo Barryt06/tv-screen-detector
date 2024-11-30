@@ -3,6 +3,9 @@ const cameraFeed = document.getElementById('cameraFeed');
 const captureVideoButton = document.getElementById('captureVideo');
 const capturedVideo = document.getElementById('capturedVideo');
 
+// Cloud Function URL
+const CLOUD_FUNCTION_URL = 'https://europe-west2-sync-app-440921.cloudfunctions.net/video_vision_http';
+
 // Stream video feed from the camera
 navigator.mediaDevices.getUserMedia({ video: true })
     .then(stream => {
@@ -24,7 +27,7 @@ captureVideoButton.addEventListener('click', async () => {
         chunks.push(event.data);
     };
 
-    // Save and upload video when recording stops
+    // Send to Cloud Function when recording stops
     mediaRecorder.onstop = async () => {
         const blob = new Blob(chunks, { type: 'video/mp4' });
         const fileName = `video_${Date.now()}.mp4`;
@@ -33,8 +36,8 @@ captureVideoButton.addEventListener('click', async () => {
         capturedVideo.style.display = 'block';
         capturedVideo.src = URL.createObjectURL(blob);
 
-        // Upload video to Google Cloud Storage
-        await uploadToCloudStorage(blob, fileName);
+        // Upload video directly to Cloud Function
+        await sendToCloudFunction(blob, fileName);
     };
 
     // Start recording and stop after 1.2 seconds
@@ -42,24 +45,34 @@ captureVideoButton.addEventListener('click', async () => {
     setTimeout(() => mediaRecorder.stop(), 1200); // 1.2 seconds
 });
 
-// Upload video to Google Cloud Storage
-async function uploadToCloudStorage(videoBlob, fileName) {
-    
-    const formData = new FormData();
-    formData.append('file', videoBlob, fileName);
-    formData.append('name', fileName);
-
+// Send video directly to Cloud Function
+async function sendToCloudFunction(videoBlob, fileName) {
     try {
-        fetch('https://serene-tundra-24888-5b5b7931001b.herokuapp.com/api/upload', {
+        // Get auth token for Cloud Function
+        const token = await firebase.auth().currentUser.getIdToken();
+        
+        const formData = new FormData();
+        formData.append('video', videoBlob, fileName); // Note: changed 'file' to 'video' to match Cloud Function
+
+        const response = await fetch(CLOUD_FUNCTION_URL, {
             method: 'POST',
-            body: formData,
-            
-            
-        })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Cloud Function response:', data);
+        
+        // You might want to do something with the response
+        // data.time_detected will have the detected time
+        
     } catch (error) {
-        console.error('Error uploading video:', error);
+        console.error('Error sending video to Cloud Function:', error);
     }
 }
