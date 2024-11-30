@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Capture and upload video
 captureVideoButton.addEventListener('click', async () => {
     // Check if user is authenticated using Firebase directly
-    const currentUser = getAuth().currentUser;  // Use Firebase's getAuth()
+    const currentUser = firebase.auth().currentUser;  // Use Firebase's getAuth()
     if (!currentUser) {
         console.error('User not authenticated');
         alert('Please sign in first');
