@@ -1,3 +1,5 @@
+import { auth } from './firebase-init.js';  // Adjust path if needed
+
 // References to HTML elements
 const cameraFeed = document.getElementById('cameraFeed');
 const captureVideoButton = document.getElementById('captureVideo');
@@ -6,14 +8,19 @@ const capturedVideo = document.getElementById('capturedVideo');
 // Cloud Function URL
 const CLOUD_FUNCTION_URL = 'https://europe-west2-sync-app-440921.cloudfunctions.net/video_vision_http';
 
-// Stream video feed from the camera
-navigator.mediaDevices.getUserMedia({ video: true })
-    .then(stream => {
+// Initialize camera when page loads
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+            video: true,
+            audio: false
+        });
         cameraFeed.srcObject = stream;
-    })
-    .catch(error => {
+        console.log('Camera initialized successfully');
+    } catch (error) {
         console.error("Error accessing camera:", error);
-    });
+    }
+});
 
 // Capture and upload video
 captureVideoButton.addEventListener('click', async () => {
@@ -97,6 +104,3 @@ async function sendToCloudFunction(videoBlob, fileName) {
         throw error;
     }
 }
-
-// Export for use in other modules if needed
-export { sendToCloudFunction };
