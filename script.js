@@ -93,7 +93,7 @@ async function sendToCloudFunction(videoBlob, fileName) {
             },
             body: formData
         });
-            a
+            
         console.log('Response status:', response.status);
         const textResponse = await response.text();
         console.log('Raw response:', textResponse);
