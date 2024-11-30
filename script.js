@@ -5,6 +5,7 @@ const capturedVideo = document.getElementById('capturedVideo');
 
 // Cloud Function URL
 const CLOUD_FUNCTION_URL = 'https://europe-west2-sync-app-440921.cloudfunctions.net/video_vision_http';
+const AUTH_TOKEN = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjM2MjgyNTg2MDExMTNlNjU3NmE0NTMzNzM2NWZlOGI4OTczZDE2NzEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIzMjU1NTk0MDU1OS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImF1ZCI6IjMyNTU1OTQwNTU5LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA5ODczMzk4NTQ3MTA0NjQ4Mzc1IiwiZW1haWwiOiJ4YXZpZXJ3aW50b25AaG90bWFpbC5jby51ayIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiZFBia1c2eGt1MnQ5N1ZsN1lZejAwUSIsImlhdCI6MTczMjk5MjI1MywiZXhwIjoxNzMyOTk1ODUzfQ.eeXd0XvztY1zZKkTg8yJzHJRn8surDdz1CGiVdL_MWYJ-D7dQ3eWbp-vH4PSHOdv8v5j4Rea_KQ4Hl_ppDZzJ5evjfsINkgYOS8ZTp8ShrJlGh45TC-YEEsI_bDMbIkw2atL2NP7eJoaOPGJn_8y_zaN6RsOOy0nM0vUBa_Fkgqg2Fpf_C32OsqdKLl4f2eJ9WTso8HjrDz8Czt6Wfs7o4moFM6PtZygfVp_odtHtd5LNgD_vqdvFKQ9U29QO69Gq5CPUt2yHa0WjC00YrCNT4yi5ADFcjtNz9JFjdpKn0Oo2UsPrsXZ_d0eS_hSjiy-4cZZFvbnt5O1jd5h4V0Z8g';
 
 // Stream video feed from the camera
 navigator.mediaDevices.getUserMedia({ video: true })
@@ -66,13 +67,14 @@ async function sendToCloudFunction(videoBlob, fileName) {
        }
 
        const response = await fetch(CLOUD_FUNCTION_URL, {
-           method: 'POST',
-           mode: 'cors',
-           headers: {
-               'Accept': 'application/json',
-           },
-           body: formData
-       });
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${AUTH_TOKEN}`
+            },
+            body: formData
+        });
 
        console.log('Response status:', response.status); // Debug log
        console.log('Response headers:', [...response.headers]); // Debug log
