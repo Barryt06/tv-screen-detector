@@ -46,18 +46,18 @@ captureVideoButton.addEventListener('click', async () => {
 });
 
 // Send video directly to Cloud Function
+// Capture and upload video directly to Cloud Function
 async function sendToCloudFunction(videoBlob, fileName) {
     try {
-        // Get auth token for Cloud Function
-        const token = await firebase.auth().currentUser.getIdToken();
-        
         const formData = new FormData();
-        formData.append('video', videoBlob, fileName); // Note: changed 'file' to 'video' to match Cloud Function
+        formData.append('video', videoBlob, fileName);
 
-        const response = await fetch(CLOUD_FUNCTION_URL, {
+        const response = await fetch('https://europe-west2-sync-app-440921.cloudfunctions.net/video_vision_http', {
             method: 'POST',
+            mode: 'cors', // Enable CORS
             headers: {
-                'Authorization': `Bearer ${token}`
+                // No need to set Content-Type as FormData sets it automatically
+                'Accept': 'application/json',
             },
             body: formData
         });
@@ -68,9 +68,7 @@ async function sendToCloudFunction(videoBlob, fileName) {
 
         const data = await response.json();
         console.log('Cloud Function response:', data);
-        
-        // You might want to do something with the response
-        // data.time_detected will have the detected time
+        return data;
         
     } catch (error) {
         console.error('Error sending video to Cloud Function:', error);
