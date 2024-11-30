@@ -17,9 +17,13 @@ const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
   console.log("Background message received:", payload);
-  chrome.runtime.sendMessage({
-    type: 'FCM_BACKGROUND_MESSAGE',
-    payload: payload
+  self.clients.matchAll().then(clients => {
+    clients.forEach(client => {
+      client.postMessage({
+        type: 'FCM_BACKGROUND_MESSAGE',
+        payload: payload
+      });
+    });
   });
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
