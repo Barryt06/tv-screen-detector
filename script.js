@@ -67,7 +67,7 @@ captureVideoButton.addEventListener('click', async () => {
 // Send video directly to Cloud Function
 async function sendToCloudFunction(videoBlob, fileName) {
     try {
-        const currentUser = getAuth().currentUser;
+        const currentUser = firebase.auth().currentUser;
         if (!currentUser) {
             throw new Error('No authenticated user');
         }
