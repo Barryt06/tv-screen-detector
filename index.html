@@ -18,18 +18,11 @@
     <button id="captureVideo">Capture Video</button>
     <canvas id="imageCanvas" style="display: none;"></canvas>
     <video id="capturedVideo" controls style="display: none;"></video>
-
-    <!-- Firebase Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
-
-    <!-- Your Scripts -->
-    <script src="firebase-init.js"></script>
+    <!-- Move Firebase initialization to separate module -->
+    <script type="module" src="firebase-init.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
-
 
 
 
