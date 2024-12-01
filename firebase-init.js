@@ -73,12 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
 // Handle incoming messages
 onMessage(messaging, (payload) => {
   console.log("Message received:", payload);
-   chrome.runtime.sendMessage({
-    action: "data_received",
-    data: payload
-  }, (response) => {
-    console.log('Message sent to background script:', response);
-  });
+   window.postMessage({
+  type: 'FIREBASE_DATA',
+  data: yourData
+}, '*');
   const { title, body } = payload.notification;
   new Notification(title, { body });
 });
