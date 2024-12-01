@@ -82,13 +82,16 @@ async function sendToCloudFunction(videoBlob, fileName) {
         const formData = new FormData();
         formData.append('video', videoBlob, fileName);
 
+        for (let pair of formData.entries()) {
+            console.log(pair[0], pair[1]); // Debug line
+        }
+
         const response = await fetch(CLOUD_FUNCTION_URL, {
             method: 'POST',
             mode: 'cors',
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${idToken}`,
-                'Content-Type': 'multipart/form-data',  // Add this for FormData
                 'Origin': 'https://xav123j.github.io'   // Add your site origin
             },
             body: formData
