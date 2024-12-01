@@ -6,29 +6,13 @@ const capturedVideo = document.getElementById('capturedVideo');
 // Cloud Function URL
 const CLOUD_FUNCTION_URL = 'https://europe-west2-sync-app-440921.cloudfunctions.net/video_vision_http';
 
-// Initialize when page loads
+// Initialize camera and setup
 document.addEventListener('DOMContentLoaded', async () => {
-    // Check if Firebase is initialized
-    if (!firebase.apps.length) {
-        console.error('Firebase not initialized!');
+    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+        console.error("Camera enumeration not supported");
         return;
     }
 
-    // Wait for Firebase Auth to initialize and check user state
-    firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-            console.log('User is signed in:', user.email);
-            initializeCamera();  // Only initialize camera when user is signed in
-        } else {
-            console.log('No user signed in');
-            // Call your existing authentication function
-            initializeNotifications();  // This should handle Google sign-in
-        }
-    });
-});
-
-// Separate camera initialization function
-async function initializeCamera() {
     try {
         // List available cameras
         const devices = await navigator.mediaDevices.enumerateDevices();
@@ -62,7 +46,7 @@ async function initializeCamera() {
     } catch (error) {
         console.error("Error accessing camera:", error);
     }
-}
+});
 
 // Handle camera switching
 cameraSelect.addEventListener('change', async () => {
