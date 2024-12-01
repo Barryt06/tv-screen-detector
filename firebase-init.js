@@ -75,7 +75,7 @@ onMessage(messaging, (payload) => {
   console.log("Message received:", payload);
    window.postMessage({
   type: 'FIREBASE_DATA',
-  data: yourData
+  data: payload
 }, '*');
   const { title, body } = payload.notification;
   new Notification(title, { body });
