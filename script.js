@@ -6,17 +6,6 @@ const capturedVideo = document.getElementById('capturedVideo');
 // Cloud Function URL
 const CLOUD_FUNCTION_URL = 'https://europe-west2-sync-app-440921.cloudfunctions.net/video_vision_http';
 
-// Add auth state observer
-firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-        console.log('User is signed in:', user.email);
-        captureVideoButton.disabled = false;  // Enable capture button when signed in
-    } else {
-        console.log('No user signed in');
-        captureVideoButton.disabled = true;   // Disable capture button when not signed in
-        initializeNotifications();  // Your existing auth function
-    }
-});
 
 // Initialize camera and setup
 document.addEventListener('DOMContentLoaded', async () => {
