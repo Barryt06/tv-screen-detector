@@ -16,14 +16,59 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Initialize camera
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-            video: true,
-            audio: false
+        // List available cameras
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        
+        // Add cameras to select dropdown
+        cameraSelect.innerHTML = '';
+        videoDevices.forEach(device => {
+            const option = document.createElement('option');
+            option.value = device.deviceId;
+            option.text = device.label || `Camera ${cameraSelect.length + 1}`;
+            if (option.text.toLowerCase().includes('back') || 
+                option.text.toLowerCase().includes('environment')) {
+                option.selected = true;
+            }
+            cameraSelect.appendChild(option);
         });
+
+        // Start camera with selected device (or back camera)
+        const constraints = {
+            video: {
+                facingMode: "environment"  // Try back camera first
+            },
+            audio: false
+        };
+
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        currentStream = stream;
         cameraFeed.srcObject = stream;
         console.log('Camera initialized successfully');
     } catch (error) {
         console.error("Error accessing camera:", error);
+    }
+});
+
+// Handle camera switching
+cameraSelect.addEventListener('change', async () => {
+    try {
+        // Stop current stream
+        if (currentStream) {
+            currentStream.getTracks().forEach(track => track.stop());
+        }
+
+        // Start new stream with selected camera
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                deviceId: { exact: cameraSelect.value }
+            },
+            audio: false
+        });
+        currentStream = stream;
+        cameraFeed.srcObject = stream;
+    } catch (error) {
+        console.error("Error switching camera:", error);
     }
 });
 
