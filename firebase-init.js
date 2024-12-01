@@ -73,6 +73,29 @@ document.addEventListener('DOMContentLoaded', () => {
 // Handle incoming messages
 onMessage(messaging, (payload) => {
   console.log("Message received:", payload);
+  console.log("Background message received:", payload);
+  
+  self.clients.matchAll({type: 'window'}).then(clients => {
+    console.log('Matching clients count:', clients.length);
+    
+    if (clients.length === 0) {
+      console.warn('No clients found to receive message');
+    }
+    
+    clients.forEach(client => {
+      try {
+        console.log('Attempting to post message to client:', client);
+        client.postMessage({
+          type: 'FCM_BACKGROUND_MESSAGE',
+          payload: payload
+        });
+      } catch (error) {
+        console.error('Error posting message to client:', error);
+      }
+    });
+  }).catch(error => {
+    console.error('Error in matchAll:', error);
+  });
   const { title, body } = payload.notification;
   new Notification(title, { body });
 });
