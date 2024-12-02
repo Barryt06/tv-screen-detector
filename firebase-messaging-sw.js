@@ -19,7 +19,9 @@ messaging.onBackgroundMessage((payload) => {
   console.log("Background message received:", payload);
   
   self.clients.matchAll({ includeUncontrolled: true, type: "window" }).then((clients) => {
+    console.log("Clients")
     clients.forEach((client) => {
+      console.log(client)
       client.postMessage({
         type: "FIREBASE_DATA",
         data: payload,
