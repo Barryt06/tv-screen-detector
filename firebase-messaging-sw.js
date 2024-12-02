@@ -18,17 +18,14 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage((payload) => {
   console.log("Background message received:", payload);
   
-  event.waitUntil(
-      self.clients.matchAll({ includeUncontrolled: true, type: 'window' }).then((clients) => {
-        clients.forEach((client) => {
-          // Send the payload to the client
-          client.postMessage({
-            type: 'FIREBASE_DATA',
-            data: payload,
-          });
-        });
-      })
-    );
+  self.clients.matchAll({ includeUncontrolled: true, type: "window" }).then((clients) => {
+    clients.forEach((client) => {
+      client.postMessage({
+        type: "FIREBASE_DATA",
+        data: payload,
+      });
+    });
+  });
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
