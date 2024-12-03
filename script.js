@@ -1,11 +1,13 @@
 // References to HTML elements
 const cameraFeed = document.getElementById('cameraFeed');
 const captureVideoButton = document.getElementById('captureVideo');
-const capturedVideo = document.getElementById('capturedVideo');
+const cameraSelect = document.getElementById('cameraSelect');
 
 // Cloud Function URL
 const CLOUD_FUNCTION_URL = 'https://europe-west2-sync-app-440921.cloudfunctions.net/video_vision_http';
 
+// Track current stream
+let currentStream;
 
 // Initialize camera and setup
 document.addEventListener('DOMContentLoaded', async () => {
@@ -73,13 +75,18 @@ cameraSelect.addEventListener('change', async () => {
 
 // Capture and upload video
 captureVideoButton.addEventListener('click', async () => {
-    // Check if user is authenticated using Firebase directly
-    const currentUser = firebase.auth().currentUser;  // Use Firebase's getAuth()
+    // Get user and timestamp immediately when button is pressed
+    const currentUser = firebase.auth().currentUser;
+    const captureTimestamp = Date.now();
+
     if (!currentUser) {
         console.error('User not authenticated');
         alert('Please sign in first');
         return;
     }
+
+    const userId = currentUser.uid;
+    console.log(`Capture initiated by user ${userId} at ${captureTimestamp}`);
 
     const stream = cameraFeed.srcObject;
     const mediaRecorder = new MediaRecorder(stream);
@@ -92,12 +99,9 @@ captureVideoButton.addEventListener('click', async () => {
     mediaRecorder.onstop = async () => {
         try {
             const blob = new Blob(chunks, { type: 'video/mp4' });
-            const fileName = `video_${Date.now()}.mp4`;
+            const fileName = `${userId}_${captureTimestamp}.mp4`;
             
-            capturedVideo.style.display = 'block';
-            capturedVideo.src = URL.createObjectURL(blob);
-            
-            const result = await sendToCloudFunction(blob, fileName);
+            const result = await sendToCloudFunction(blob, fileName, userId, captureTimestamp);
             console.log('Upload successful:', result);
         } catch (error) {
             console.error('Error in onstop handler:', error);
@@ -109,7 +113,7 @@ captureVideoButton.addEventListener('click', async () => {
 });
 
 // Send video directly to Cloud Function
-async function sendToCloudFunction(videoBlob, fileName) {
+async function sendToCloudFunction(videoBlob, fileName, userId, timestamp) {
     try {
         const currentUser = firebase.auth().currentUser;
         if (!currentUser) {
@@ -119,12 +123,16 @@ async function sendToCloudFunction(videoBlob, fileName) {
         console.log('Starting upload...'); 
         console.log('File name:', fileName); 
         console.log('Blob size:', videoBlob.size);
+        console.log('User ID:', userId);
+        console.log('Timestamp:', timestamp);
 
         // Get fresh token
         const idToken = await currentUser.getIdToken(true);
         
         const formData = new FormData();
         formData.append('video', videoBlob, fileName);
+        formData.append('userId', userId);
+        formData.append('timestamp', timestamp);
 
         for (let pair of formData.entries()) {
             console.log(pair[0], pair[1]); // Debug line
@@ -136,7 +144,7 @@ async function sendToCloudFunction(videoBlob, fileName) {
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${idToken}`,
-                'Origin': 'https://xav123j.github.io'   // Add your site origin
+                'Origin': 'https://xav123j.github.io'
             },
             body: formData
         });
