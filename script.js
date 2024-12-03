@@ -143,8 +143,7 @@ async function sendToCloudFunction(videoBlob, fileName, userId, timestamp) {
             mode: 'cors',
             headers: {
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${idToken}`,
-                'Origin': 'https://xav123j.github.io'
+                'Authorization': `Bearer ${idToken}`
             },
             body: formData
         });
