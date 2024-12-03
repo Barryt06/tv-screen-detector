@@ -103,7 +103,6 @@ captureVideoButton.addEventListener('click', async () => {
             const fileName = `${userId}_${captureTimestamp}.mp4`;
             
             const result = await sendToCloudFunction(blob, fileName, userId, captureTimestamp);
-            console.log('Upload successful:', result);
         } catch (error) {
             console.error('Error in onstop handler:', error);
         }
@@ -147,16 +146,12 @@ async function sendToCloudFunction(videoBlob, fileName, userId, timestamp) {
             body: formData
         });
             
-        console.log('Response status:', response.status);
         const textResponse = await response.text();
-        console.log('Raw response:', textResponse);
-
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}, response: ${textResponse}`);
         }
 
         const data = JSON.parse(textResponse);
-        console.log('Parsed response:', data);
         return data;
         
     } catch (error) {
