@@ -124,16 +124,14 @@ async function sendToCloudFunction(videoBlob, fileName, userId, timestamp) {
         console.log('Starting upload...'); 
         console.log('File name:', fileName); 
         console.log('Blob size:', videoBlob.size);
-        console.log('User ID:', userId);
-        console.log('Timestamp:', timestamp);
+
 
         // Get fresh token
         const idToken = await currentUser.getIdToken(true);
         
         const formData = new FormData();
         formData.append('video', videoBlob, fileName);
-        formData.append('userId', userId);
-        formData.append('timestamp', timestamp);
+        
 
         for (let pair of formData.entries()) {
             console.log(pair[0], pair[1]); // Debug line
