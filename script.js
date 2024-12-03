@@ -77,7 +77,7 @@ cameraSelect.addEventListener('change', async () => {
 captureVideoButton.addEventListener('click', async () => {
     // Get user and timestamp immediately when button is pressed
     const currentUser = firebase.auth().currentUser;
-    const captureTimestamp = Date.now();
+    
 
     if (!currentUser) {
         console.error('User not authenticated');
@@ -89,6 +89,7 @@ captureVideoButton.addEventListener('click', async () => {
     console.log(`Capture initiated by user ${userId} at ${captureTimestamp}`);
 
     const stream = cameraFeed.srcObject;
+    const captureTimestamp = Date.now();
     const mediaRecorder = new MediaRecorder(stream);
     const chunks = [];
 
