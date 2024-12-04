@@ -79,13 +79,13 @@ captureVideoButton.addEventListener('click', async () => {
     const currentUser = firebase.auth().currentUser;
     
 
-    if (!currentUser) {
-        console.error('User not authenticated');
-        alert('Please sign in first');
-        return;
-    }
+    // if (!currentUser) {
+    //     console.error('User not authenticated');
+    //     alert('Please sign in first');
+    //     return;
+    // }
 
-    const userId = currentUser.uid;
+    const userId = '1';
     console.log(`Capture initiated by user ${userId} at ${captureTimestamp}`);
 
     const stream = cameraFeed.srcObject;
