@@ -85,7 +85,7 @@ captureVideoButton.addEventListener('click', async () => {
         return;
     }
 
-    const userId = '1';
+    const userId = currentUser.uid;
     console.log(`Capture initiated by user ${userId}`);
 
     const stream = cameraFeed.srcObject;
