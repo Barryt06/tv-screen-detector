@@ -86,7 +86,7 @@ captureVideoButton.addEventListener('click', async () => {
     // }
 
     const userId = '1';
-    console.log(`Capture initiated by user ${userId} at ${captureTimestamp}`);
+    console.log(`Capture initiated by user ${userId}`);
 
     const stream = cameraFeed.srcObject;
     const captureTimestamp = Date.now();
