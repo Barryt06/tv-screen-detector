@@ -26,21 +26,26 @@ const provider = new firebase.auth.GoogleAuthProvider();
 provider.addScope("https://www.googleapis.com/auth/firebase.messaging");
 
 // Sign in with a pop-up window
-firebase
-  .auth()
-  .signInWithPopup(provider)
-  .then((result) => {
-    // User signed in successfully
-    const user = result.user;
-    // Access the Google OAuth token if needed
-    const credential = result.credential;
-    const token = credential.accessToken;
-    // Proceed with FCM subscription
-  })
-  .catch((error) => {
-    // Handle errors here
-    console.error(error);
-  });
+// Sign-in function
+const signInWithGoogle = () => {
+  firebase
+    .auth()
+    .signInWithPopup(provider)
+    .then((result) => {
+      // User signed in successfully.
+      const user = result.user;
+      console.log(`Welcome ${user.displayName}!`);
+    })
+    .catch((error) => {
+      // Handle Errors here.
+      console.error(error);
+    });
+};
+
+// Attach the sign-in function to the button
+document
+  .getElementById("sign-in-button")
+  .addEventListener("click", signInWithGoogle);
 
 messaging.onBackgroundMessage((payload) => {
   console.log("Background message received:", payload);

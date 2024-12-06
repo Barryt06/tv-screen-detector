@@ -1,34 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TV Screen Detector</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
     <h1>Welcome to the TV Screen Detector App</h1>
     <div id="cameraContainer">
-        <video id="cameraFeed" autoplay playsinline></video>
-        <div id="boundingBox"></div>
-        <div id="orientationPrompt">Please rotate your device for optimal experience</div>
+      <video id="cameraFeed" autoplay playsinline></video>
+      <div id="boundingBox"></div>
+      <div id="orientationPrompt">
+        Please rotate your device for optimal experience
+      </div>
     </div>
     <select id="cameraSelect"></select>
+    <div id="custom-google-btn" class="customGPlusSignIn">
+      <span class="icon"></span>
+      <span class="buttonText">Sign in with Google</span>
+    </div>
     <button id="switchCamera">Switch Camera</button>
     <button id="captureVideo">Capture Video</button>
-    <canvas id="imageCanvas" style="display: none;"></canvas>
-    <video id="capturedVideo" controls style="display: none;"></video>
+    <canvas id="imageCanvas" style="display: none"></canvas>
+    <video id="capturedVideo" controls style="display: none"></video>
     <!-- Move Firebase initialization to separate module -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script type="module" src="firebase-init.js"></script>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
-
-
-
-
-
-
