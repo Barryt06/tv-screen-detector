@@ -42,11 +42,6 @@ const signInWithGoogle = () => {
     });
 };
 
-// Attach the sign-in function to the button
-document
-  .getElementById("sign-in-button")
-  .addEventListener("click", signInWithGoogle);
-
 messaging.onBackgroundMessage((payload) => {
   console.log("Background message received:", payload);
 
